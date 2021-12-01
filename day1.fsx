@@ -14,18 +14,10 @@ Expect.equal testResult expectedResult "Test result is incorrect"
 let result = countIncreases Data.sonarData
 printfn "Result for day 1 = %i" result
 
-let takeIff3 = function
-    | [] -> []
-    | x::y::z::_ -> [x;y;z]
-    | _::_::_ -> []
-    | _::_ -> []
+let sumIff3 = function x::y::z::_ -> [x+y+z] | _ -> []
 
-let slidingWindow (xs: int list)= 
-    let rec fn acc = function
-    | [] -> acc
-    | x::xs ->
-        let acc' = acc @ [x::xs |> takeIff3 |> List.sum]
-        fn acc' xs
+let slidingWindow (xs: int list) = 
+    let rec fn acc = function [] -> acc | x::xs -> fn <| acc @ (sumIff3 (x::xs)) <| xs
     fn [] xs
 
 let countIncreases' = slidingWindow >> countIncreases
@@ -36,3 +28,5 @@ Expect.equal testResult2 expectedResult2 "Test result 2 is incorrect"
 
 let result2 = countIncreases' Data.sonarData
 printfn "Result for day 1 part 2 = %i" result2
+
+List.mapi
