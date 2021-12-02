@@ -11,7 +11,7 @@ let testResult = countIncreases testData
 let expectedResult = 7
 Expect.equal testResult expectedResult "Test result is incorrect"
 
-let result = countIncreases Data.sonarData
+let result = Data.sonarData () |> countIncreases
 printfn "Result for day 1 = %i" result
 
 let sumIff3 = function x::y::z::_ -> [x+y+z] | _ -> []
@@ -26,7 +26,7 @@ let testResult2 = countIncreases' testData
 let expectedResult2 = 5
 Expect.equal testResult2 expectedResult2 "Test result 2 is incorrect"
 
-let result2 = countIncreases' Data.sonarData
+let result2 = Data.sonarData() |> countIncreases'
 printfn "Result for day 1 part 2 = %i" result2
 
 List.mapi
