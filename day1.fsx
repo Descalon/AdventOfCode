@@ -16,11 +16,9 @@ printfn "Result for day 1 = %i" result
 
 let sumIff3 = function x::y::z::_ -> [x+y+z] | _ -> []
 
-let slidingWindow (xs: int list) = 
-    let rec fn acc = function [] -> acc | x::xs -> fn <| acc @ (sumIff3 (x::xs)) <| xs
-    fn [] xs
+let windowed (xs: int list)= xs |> List.windowed 3 |> List.map (List.sum)
 
-let countIncreases' = slidingWindow >> countIncreases
+let countIncreases' = windowed >> countIncreases
 
 let testResult2 = countIncreases' testData
 let expectedResult2 = 5
@@ -28,5 +26,3 @@ Expect.equal testResult2 expectedResult2 "Test result 2 is incorrect"
 
 let result2 = Data.sonarData() |> countIncreases'
 printfn "Result for day 1 part 2 = %i" result2
-
-List.mapi

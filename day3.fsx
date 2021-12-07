@@ -47,7 +47,6 @@ let calculationTestResult = calc parseTestResult negateTestResult
 let expectedCalculationResult = 198
 Expect.equal calculationTestResult expectedCalculationResult "Calculation test failed"
 
-
 let calculate xs =
     let a = processData xs
     let b = negate a
