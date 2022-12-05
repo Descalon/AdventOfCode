@@ -37,3 +37,10 @@ let private toPair input =
     Seq.item 0 x, Seq.item 1 x
 
 let rpsData () = "datafiles/rps.txt" |> readTransformFile (split ' ' >>  toPair)
+
+let stackData () = "datafiles/stacks.txt" |> readTransformFile (split ',' >> List.map char)
+let private toTriple input = 
+    let x= input |> Seq.take 3
+    Seq.item 0 x, Seq.item 1 x, Seq.item 2 x
+
+let stackInstructions () = "datafiles/stack_instructions.txt" |> readTransformFile (split ',' >> List.map int >> toTriple)
