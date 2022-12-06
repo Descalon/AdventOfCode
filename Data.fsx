@@ -44,3 +44,5 @@ let private toTriple input =
     Seq.item 0 x, Seq.item 1 x, Seq.item 2 x
 
 let stackInstructions () = "datafiles/stack_instructions.txt" |> readTransformFile (split ',' >> List.map int >> toTriple)
+
+let markerData () = "datafiles/marker.txt" |> readFile |> List.head

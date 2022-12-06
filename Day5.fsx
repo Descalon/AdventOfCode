@@ -21,7 +21,8 @@ let testinstructions =
       (1, 1, 2) ]
 
 let pop n (s: Stack) =
-    let head = s |> List.take n |> List.rev
+    let head = 
+        s |> List.take n |> List.rev // Uncomment this line for solution to part 1
     let rest = s |> List.skip n
     head, rest
 
@@ -35,15 +36,17 @@ let replace index value list =
         |> List.removeAt index
         |> List.insertAt index value
 
-let move n f t (s: StackCollection) : StackCollection = 
-    let (head,rest) = s[f] |> pop n
+let move popfn n f t (s: StackCollection) : StackCollection = 
+    let (head,rest) = s[f] |> popfn n
     let n = s[t] |> push head
     s |> replace f rest |> replace t n 
 
-let moveFromTriple (n,f,t) = move n (f-1) (t-1)
+let moveFromTriple popfn (n,f,t) = move popfn n (f-1) (t-1)
 
-let run instructions data = 
-    instructions |> List.fold (fun s i -> moveFromTriple i s) data
+let run' popfn instructions data = 
+    instructions |> List.fold (fun s i -> moveFromTriple popfn i s) data
+
+let run = run' pop
 
 let read (s:StackCollection) = s |> List.map List.head |> Array.ofList |> String
 
@@ -52,3 +55,17 @@ let expectedResult = "CMZ"
 Expect.equal testResult expectedResult "Test result is incorrect"
 
 Data.stackData () |> run (Data.stackInstructions ()) |> read |> print 1
+
+let pop' n (s: Stack) =
+    let head = 
+        s |> List.take n
+    let rest = s |> List.skip n
+    head, rest
+
+let run2 = run' pop'
+
+let testResult2 = testdata |> run2 testinstructions |> read
+let expectedResult2 = "MCD"
+Expect.equal testResult2 expectedResult2 "Test result is incorrect"
+
+Data.stackData () |> run2 (Data.stackInstructions ()) |> read |> print 2
