@@ -5,7 +5,7 @@ open System
 open Expecto
 
 let testdata = ["vJrwpWtwJgWrhcsFMMfFFhFp";"jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL";"PmmdzqPrVvPwwTWBwg";"wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn";"ttgJtRGJQctTZtZT";"CrZsJsPPZsGzwwsLwLmpwMDw";]
-let print p = Utils.printResult 2 p
+let print p = Utils.printResult 3 p
 
 let lookup = 
     let l = Seq.zip ['a' .. 'z'] (Seq.initInfinite ((+) 1))
@@ -29,10 +29,10 @@ Expect.equal testResult expectedResult "Test result is incorrect"
 
 // Data.sackData() |> sum |> print 1
 
-// let splitList: 'a list -> 'b list list = 
-//     let rec fn acc = function
-//     | [] -> acc
-//     | xs ->
-//         let (n,ns) = xs |> List.splitAt 3
-//         fn (acc @ [n]) ns
-//     fn [] input
+let sum2 = List.chunkBySize 3 >> List.map (intersect >> get) >> List.sum
+
+let testResult2 = sum2 testdata
+let expectedResult2 = 70
+Expect.equal testResult2 expectedResult2 "Test result is incorrect"
+
+Data.sackData() |> sum2 |> print 2
