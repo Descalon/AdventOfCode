@@ -11,8 +11,8 @@ let rec fn left right =
             let s = x |> split ','
             int s[0], int s[1]
 
-        let left' = l :: left
-        let right' = r :: right
+        let left' = left@[l]
+        let right' = right@[r]
         fn left' right' xs
 
 let testinput = [ "3,4"; "4,3"; "2,5"; "1,3"; "3,9"; "3,3" ]
