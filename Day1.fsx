@@ -14,11 +14,15 @@ let s1 = List.sort testList1
 let s2 = List.sort testList2
 let absDiff (a:int,b:int) = Math.Abs (a-b)
 
-let solution (l,r) = List.zip l r |> List.map (absDiff)
+let zipmap (l,r) = List.zip l r |> List.map (absDiff)
+let solution = zipmap >> List.sum
 
-let s = solution (s1,s2)
+let s = zipmap (s1,s2)
 
 let expectedList = [2;1;0;1;2;5]
 Expect.equal s expectedList "Zip error somewhere"
 
-InputData.day1 () |> solution |> List.sum |> print
+let actual = solution (s1,s2)
+Expect.equal actual 11 "Summation error"
+
+// InputData.day1 () |> zipmap |> List.sum |> print
