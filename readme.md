@@ -1,6 +1,6 @@
-# Advent of code 2021
+# Advent of code 2024
 
-My personal entries for the [Advent of code](https://adventofcode.com) 2022 event.
+My personal entries for the [Advent of code](https://adventofcode.com) 2024 event.
 All entries are written in F# script files.
 
 ## How to run
