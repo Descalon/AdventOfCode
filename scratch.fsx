@@ -17,4 +17,9 @@ let rec fn left right =
 
 let testinput = [ "3,4"; "4,3"; "2,5"; "1,3"; "3,9"; "3,3" ]
 
-fn [] [] testinput |> printfn "%A"
+let absDiff (a:int,b:int) = Math.Abs (a-b)
+
+let zipmap (l,r) = List.zip l r |> List.map (absDiff)
+let solution = zipmap >> List.sum
+
+fn [] [] testinput |> solution |> printfn "%i"
