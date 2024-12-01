@@ -6,7 +6,7 @@ open System
 open Data
 open Utils
 
-let mutable print = printResult 1 1
+let mutable print = (fun (result:int) -> printResult 1 1 result)
 let testList1 = [3;4;2;1;3;3]
 let testList2 = [4;3;5;3;9;3]
 
