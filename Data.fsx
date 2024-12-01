@@ -19,7 +19,7 @@ module InputData =
       | x::xs ->
         let (l,r) = 
           let s = x |> split ','
-          int s[0], int s[-1]
+          int s[0], int s[1]
         let left' = l::left
         let right' = r::right
         fn left' right' xs
