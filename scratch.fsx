@@ -20,6 +20,9 @@ let testinput = [ "3,4"; "4,3"; "2,5"; "1,3"; "3,9"; "3,3" ]
 let absDiff (a:int,b:int) = Math.Abs (a-b)
 
 let zipmap (l,r) = List.zip l r |> List.map (absDiff)
-let solution = zipmap >> List.sum
+let sort (l,r) = List.sort l, List.sort r
+let solution = sort >> zipmap >> List.sum
 
-fn [] [] testinput |> solution |> printfn "%i"
+let input = fn [] [] testinput
+
+input |> solution |> printfn "should be 11: %i"
