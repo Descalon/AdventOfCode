@@ -21,4 +21,4 @@ let s = solution (s1,s2)
 let expectedList = [2;1;0;1;2;5]
 Expect.equal s expectedList "Zip error somewhere"
 
-InputData.day1 () |> solution |> print
+InputData.day1 () |> solution |> List.sum |> print
