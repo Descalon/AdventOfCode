@@ -7,24 +7,18 @@ open Data
 open Utils
 
 let mutable print = (fun (result:int) -> printResult 1 1 result)
-let testList1 = [3;4;2;1;3;3]
-let testList2 = [4;3;5;3;9;3]
+let left = [3;4;2;1;3;3]
+let right = [4;3;5;3;9;3]
 
-let s1 = List.sort testList1
-let s2 = List.sort testList2
-let absDiff (a:int,b:int) = Math.Abs (a-b)
+let count l x = l |> List.filter ((=)x) |> List.length
 
-let sort (l,r) = List.sort l, List.sort r
+let countRight = count right
 
-let zipmap (l,r) = List.zip l r |> List.map (absDiff)
-let solution = sort >> zipmap >> List.sum
+let folder s i = 
+  s + ((countRight i) * i)
 
-let s = zipmap (s1,s2)
+let actual = 
+  left 
+  |> List.fold folder 0
 
-let expectedList = [2;1;0;1;2;5]
-Expect.equal s expectedList "Zip error somewhere"
-
-let actual = solution (testList1, testList2)
-Expect.equal actual 11 "Summation error"
-
-InputData.day1 () |> solution  |> print
+Expect.equal actual 31 "Something went wrong with folding"
