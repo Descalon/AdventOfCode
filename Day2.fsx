@@ -13,7 +13,9 @@ let data =
       [ 9; 7; 6; 2; 1 ]
       [ 1; 3; 2; 4; 5 ]
       [ 8; 6; 4; 4; 1 ]
-      [ 1; 3; 6; 7; 9 ] ]
+      [ 1; 3; 6; 7; 9 ] 
+      [ 8; 9; 7; 6; 5 ]
+      ]
 
 let check report = 
   let getOp = function
@@ -57,12 +59,12 @@ let check report =
 
 
 let actual = data |> List.map check
-let expected = [true;false;false;true;true;true]
+let expected = [true;false;false;true;true;true;true]
 
 Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine";
 
-let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
-
-Expect.equal (data |> solution) 4 "Whoopsy"
-
-InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
+// let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
+//
+// Expect.equal (data |> solution) 4 "Whoopsy"
+//
+// InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
