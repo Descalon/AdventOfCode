@@ -19,25 +19,26 @@ let check report =
   | [] -> failwith "damn"
   | _::[] -> failwith "damn"
   | x::y::_ -> match sign (x-y) with
-                | -1 -> (>)
-                | _ -> (<)
+                | -1 -> (<)
+                | _ -> (>)
 
 
   let rec fn op acc = function
     | [] -> acc
     | _::[] -> acc
     | x::y::xs ->
-      let p = 
+      if (not acc) then false else
+      let p1 = 
         let inrange x = x >= 1 && x <= 3
         x-y |> abs |> inrange
       let p2 = op x y
-      let acc' = acc && p && p2
+      let acc' = acc && p1 && p2
       fn op acc' xs
   let op = getOp report
 
   fn op true report
 
-let actual = data |> List.map (check)
+let actual = data |> List.map check
 let expected = [true;false;false;false;false;true]
 
 Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine";
