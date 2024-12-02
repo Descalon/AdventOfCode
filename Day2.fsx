@@ -18,29 +18,23 @@ let data =
       ]
 
 let check report = 
-  let getOp = function
-  | [] -> failwith "damn"
-  | _::[] -> failwith "damn"
-  | x::y::_ -> match sign (x-y) with
-                | -1 -> (<)
-                | _ -> (>)
-
-  let rec retry op acc = function
+  let rec retry o acc = function
     | [] -> acc
     | _::[] -> acc
     | x::y::xs ->
+      let op = match o with | Some fn -> fn | None -> match sign (x-y) with | -1 -> (<) | _ -> (>) 
       let p1 = 
         let inrange x = x >= 1 && x <= 3
         x-y |> abs |> inrange
       let p2 = op x y
-      let acc' = acc && p1
-      let acc'' = acc' && p2
-      if acc'' then retry op acc'' (y::xs) else false
+      let acc' = acc && p1 && p2
+      if acc' then retry (Some op) acc' (y::xs) else false
 
-  let rec fn op acc prev = function
+  let rec fn o acc prev = function
     | [] -> acc
     | _::[] -> acc
     | x::y::xs ->
+      let op = match o with | Some fn -> fn | None -> match sign (x-y) with | -1 -> (<) | _ -> (>) 
       let p1 = 
         let inrange x = x >= 1 && x <= 3
         x-y |> abs |> inrange
@@ -48,14 +42,11 @@ let check report =
       let acc' = acc && p1
       let acc'' = acc' && p2
       if acc'' then 
-        fn op acc'' (prev@[x]) (y::xs) 
+        fn (Some op) acc'' (prev@[x]) (y::xs) 
       else 
-        (retry op acc (prev@[x]@xs)) || (retry op acc (prev@[y]@xs))
+        (retry None acc (prev@[x]@xs)) || (retry None acc (prev@[y]@xs))
 
-
-  let op = getOp report
-
-  fn op true [] report
+  fn None true [] report
 
 
 let actual = data |> List.map check
@@ -63,8 +54,8 @@ let expected = [true;false;false;true;true;true;true]
 
 Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine";
 
-// let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
-//
-// Expect.equal (data |> solution) 4 "Whoopsy"
-//
-// InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
+let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
+
+Expect.equal (data |> solution) 5 "Whoopsy"
+
+InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
