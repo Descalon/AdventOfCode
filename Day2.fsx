@@ -6,6 +6,7 @@ open System
 open Data
 open Utils
 
+let mutable print = (fun (result:int) -> printResult 2 1 result)
 let data =
     [ [ 7; 6; 4; 2; 1 ]
       [ 1; 2; 7; 8; 9 ]
@@ -32,15 +33,19 @@ let check report =
         x-y |> abs |> inrange
       let p2 = op x y
       let acc' = acc && p1 && p2
-      // printfn "show me potato salad: %i-%i = %b" x y p1
       if not acc' then false else fn op acc' (y::xs)
   let op = getOp report
 
   fn op true report
+
 
 let actual = data |> List.map check
 let expected = [true;false;false;false;false;true]
 
 Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine";
 
+let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
 
+Expect.equal (data |> solution) 2 "Whoopsy"
+
+InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
