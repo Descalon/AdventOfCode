@@ -27,13 +27,13 @@ let check report =
     | [] -> acc
     | _::[] -> acc
     | x::y::xs ->
-      if (not acc) then false else
       let p1 = 
         let inrange x = x >= 1 && x <= 3
         x-y |> abs |> inrange
       let p2 = op x y
       let acc' = acc && p1 && p2
-      fn op acc' xs
+      // printfn "show me potato salad: %i-%i = %b" x y p1
+      if not acc' then false else fn op acc' (y::xs)
   let op = getOp report
 
   fn op true report
