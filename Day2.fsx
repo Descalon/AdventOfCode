@@ -20,54 +20,34 @@ let data =
       [ 1; 4; 3; 2; 1 ] ]
 
 let check report =
-    let rec retry o acc =
-        function
+  let rec fn depth report =
+    if depth > 1 then false else
+      let op = 
+        match report with
+        | [] -> failwith "nope"
+        | _::[] -> failwith "nope"
+        | x::y::_ -> match x-y |> sign with | -1 -> (<) | _ -> (>)
+
+      let rec fn' acc prev = function
         | [] -> acc
-        | _ :: [] -> acc
-        | x :: y :: xs ->
-            let op =
-                match o with
-                | Some fn -> fn
-                | None ->
-                    match sign (x - y) with
-                    | -1 -> (<)
-                    | _ -> (>)
+        | _::[] -> acc
+        | x::y::xs ->
+          let predicate1 = 
+            let inrange n = n >= 1 && n <= 3
+            (x-y) |> abs |> inrange
+          let predicate2 = op x y
 
-            let p1 =
-                let inrange x = x >= 1 && x <= 3
-                x - y |> abs |> inrange
+          let acc' = acc && predicate1 && predicate2
+          if acc' then fn' acc' (prev@[x])(y::xs)
+          else
+            let cont i = prev@[i]@xs
+            [ cont x; cont y; report |> List.tail ]
+            |> List.map (fn (depth+1))
+            |> List.fold (fun s i -> s || i) false
 
-            let p2 = op x y
-            let acc' = acc && p1 && p2
-            if acc' then retry (Some op) acc' (y :: xs) else false
-
-    let rec fn o acc prev =
-        function
-        | [] -> acc
-        | _ :: [] -> acc
-        | x :: y :: xs ->
-            let op =
-                match o with
-                | Some fn -> fn
-                | None ->
-                    match sign (x - y) with
-                    | -1 -> (<)
-                    | _ -> (>)
-
-            let p1 =
-                let inrange x = x >= 1 && x <= 3
-                x - y |> abs |> inrange
-
-            let p2 = op x y
-            let acc' = acc && p1 && p2
-
-            if acc' then
-                fn (Some op) acc' (prev @ [ x ]) (y :: xs)
-            else
-                let r = retry None true
-                (r (prev @ [ x ] @ xs)) || (r (prev @ [ y ] @ xs)) || (r (List.tail report))
-
-    fn None true [] report
+      fn' true [] report
+    
+  fn 0 report
 
 
 let actual = data |> List.map check
@@ -79,4 +59,4 @@ let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
 
 Expect.equal (data |> solution) 6 "Whoopsy"
 
-InputData.day2 () |> solution |> print
+// InputData.day2 () |> solution |> print
