@@ -6,7 +6,7 @@ open System
 open Data
 open Utils
 
-let mutable print = (fun (result:int) -> printResult 2 1 result)
+let mutable print = (fun (result:int) -> printResult 2 2 result)
 let data =
     [ [ 7; 6; 4; 2; 1 ]
       [ 1; 2; 7; 8; 9 ]
@@ -23,8 +23,7 @@ let check report =
                 | -1 -> (<)
                 | _ -> (>)
 
-
-  let rec fn op acc = function
+  let rec retry op acc = function
     | [] -> acc
     | _::[] -> acc
     | x::y::xs ->
@@ -32,20 +31,38 @@ let check report =
         let inrange x = x >= 1 && x <= 3
         x-y |> abs |> inrange
       let p2 = op x y
-      let acc' = acc && p1 && p2
-      if not acc' then false else fn op acc' (y::xs)
+      let acc' = acc && p1
+      let acc'' = acc' && p2
+      if acc'' then retry op acc'' (y::xs) else false
+
+  let rec fn op acc prev = function
+    | [] -> acc
+    | _::[] -> acc
+    | x::y::xs ->
+      let p1 = 
+        let inrange x = x >= 1 && x <= 3
+        x-y |> abs |> inrange
+      let p2 = op x y
+      let acc' = acc && p1
+      let acc'' = acc' && p2
+      if acc'' then 
+        fn op acc'' (prev@[x]) (y::xs) 
+      else 
+        (retry op acc (prev@[x]@xs)) || (retry op acc (prev@[y]@xs))
+
+
   let op = getOp report
 
-  fn op true report
+  fn op true [] report
 
 
 let actual = data |> List.map check
-let expected = [true;false;false;false;false;true]
+let expected = [true;false;false;true;true;true]
 
 Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine";
 
 let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
 
-Expect.equal (data |> solution) 2 "Whoopsy"
+Expect.equal (data |> solution) 4 "Whoopsy"
 
 InputData.day2 () |> List.map check |> List.sumBy (fun x -> if x then 1 else 0) |> print
