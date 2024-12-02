@@ -25,3 +25,8 @@ module InputData =
         fn left' right' xs
     fn [] [] (readFile "datafiles/day1.txt")
 
+  let day2() =
+    let splitfn (input:string) =
+      split ' ' input |> Seq.map int |> Seq.toList
+
+    readTransformFile splitfn ("datafiles/day2.txt")
