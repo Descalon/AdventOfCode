@@ -22,4 +22,4 @@ let solution input =
 
 Expect.equal (solution data) 48
 
-// InputData.day3 () |> solution |> print
+InputData.day3 () |> solution |> print
