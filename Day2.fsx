@@ -7,7 +7,7 @@ open System
 open Data
 open Utils
 
-let mutable print = (fun (result: int) -> printResult 2 2 result)
+let print (result: int) part = printResult 2 part result
 
 let data =
     [ [ 7; 6; 4; 2; 1 ]
@@ -15,48 +15,35 @@ let data =
       [ 9; 7; 6; 2; 1 ]
       [ 1; 3; 2; 4; 5 ]
       [ 8; 6; 4; 4; 1 ]
-      [ 1; 3; 6; 7; 9 ]
-      [ 48; 46; 47; 49; 51; 54; 56 ]
-      [ 1; 4; 3; 2; 1 ] ]
+      [ 1; 3; 6; 7; 9 ] ]
 
-let check report =
-  let rec fn depth report =
-    if depth > 1 then false else
-      let op = 
-        match report with
-        | [] -> failwith "nope"
-        | _::[] -> failwith "nope"
-        | x::y::_ -> match x-y |> sign with | -1 -> (<) | _ -> (>)
+let isSafe (report: int list) =
+    let inc =
+        [ for i in 0 .. report.Length - 2 do
+              report[i + 1] - report[i] ]
+        |> Set.ofList
 
-      let rec fn' acc prev = function
-        | [] -> acc
-        | _::[] -> acc
-        | x::y::xs ->
-          let predicate1 = 
-            let inrange n = n >= 1 && n <= 3
-            (x-y) |> abs |> inrange
-          let predicate2 = op x y
+    Set.isSubset inc ([ 1; 2; 3 ] |> Set.ofList)
+    || Set.isSubset inc ([ -1; -2; -3 ] |> Set.ofList)
 
-          let acc' = acc && predicate1 && predicate2
-          if acc' then fn' acc' (prev@[x])(y::xs)
-          else
-            let cont i = prev@[i]@xs
-            [ cont x; cont y; report |> List.tail ]
-            |> List.map (fn (depth+1))
-            |> List.fold (fun s i -> s || i) false
+let sum =
+    List.sumBy (function
+        | true -> 1
+        | _ -> 0)
 
-      fn' true [] report
-    
-  fn 0 report
+let solution1 = List.map isSafe >> sum
+Expect.equal (data |> solution1) 2 "hot damn"
 
+let puzzle = InputData.day2 ()
+puzzle |> solution1 |> print 1
 
-let actual = data |> List.map check
-let expected = [ true; false; false; true; true; true; true; true ]
+let solution2 =
+    let slices (report: int list) =
+        [ for i in 0 .. report.Length - 1 do
+              (report[.. i - 1] @ report[i + 1 ..]) |> isSafe ]
+        |> List.contains true
 
-Expect.equal actual expected "'Cause your friends don't dance, and if you don't dance, then you ain't no friend of mine"
+    List.map slices >> sum
 
-let solution = List.map check >> List.sumBy (fun x -> if x then 1 else 0)
-
-Expect.equal (data |> solution) 6 "Whoopsy"
-
-// InputData.day2 () |> solution |> print
+Expect.equal (data |> solution2) 4 "hot damn"
+puzzle |> solution2 |> print 2
