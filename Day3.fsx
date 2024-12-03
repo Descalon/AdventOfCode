@@ -18,3 +18,4 @@ let solution input = [for x in rex.Matches(input) -> (int x.Groups[2].Value) * (
 
 Expect.equal (solution data) 161
 
+InputData.day3 () |> solution |> print

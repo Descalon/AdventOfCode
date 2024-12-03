@@ -30,3 +30,6 @@ module InputData =
       split ' ' input |> Seq.map int |> Seq.toList
 
     readTransformFile splitfn ("datafiles/day2.txt")
+
+  let day3() =
+    readFile "datafiles/day3.txt" |> List.head
